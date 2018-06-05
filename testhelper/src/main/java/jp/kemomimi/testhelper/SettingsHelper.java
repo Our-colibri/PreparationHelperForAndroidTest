@@ -21,7 +21,6 @@ public class SettingsHelper extends HelperBase{
 
     /**
      * Construct a SettingsHelper object.
-     * can call {@link #show}.
      *
      * @param instrumentation Usually your {@link Instrumentation} object.
      */
@@ -171,7 +170,7 @@ public class SettingsHelper extends HelperBase{
     /**
      * Automatically set the "date auto" option of the android standard setting application.
      *
-     * @param enable
+     * @param enable ON/OFF
      *
      */
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -215,7 +214,7 @@ public class SettingsHelper extends HelperBase{
     /**
      * Automatically set the "Airplane" option of the android standard setting application.
      *
-     * @param enable
+     * @param enable ON/OFF
      *
      */
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -291,7 +290,7 @@ public class SettingsHelper extends HelperBase{
     /**
      * Automatically set the "Wi-Fi ON/OFF" option of the android standard setting application.
      *
-     * @param enable
+     * @param enable ON/OFF
      *
      */
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
