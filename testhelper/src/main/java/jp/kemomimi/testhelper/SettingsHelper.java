@@ -19,6 +19,12 @@ import java.util.Date;
 
 public class SettingsHelper extends HelperBase{
 
+    /**
+     * Construct a SettingsHelper object.
+     * can call {@link #show}.
+     *
+     * @param instrumentation Usually your {@link Instrumentation} object.
+     */
     public SettingsHelper(Instrumentation instrumentation){
         super(instrumentation);
     }
@@ -70,6 +76,12 @@ public class SettingsHelper extends HelperBase{
 
     }
 
+    /**
+     * Automatically set the date of the android standard setting application.
+     *
+     * @param month  Specify the month you want to set.
+     *
+     */
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void setSettingAppDateMoveMonth(int month) {
         long settime = System.currentTimeMillis() + (month * 1000L * 60L * 60L * 24L * 30L);
@@ -77,6 +89,12 @@ public class SettingsHelper extends HelperBase{
 
         setSettingAppDateSet(setDate);
     }
+    /**
+     * Automatically set the date of the android standard setting application.
+     *
+     * @param date  Specify the month you want to set.
+     *
+     */
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void setSettingAppDateSet(Date date) {
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) return;
@@ -149,6 +167,13 @@ public class SettingsHelper extends HelperBase{
             obj.click();
         }
     }
+
+    /**
+     * Automatically set the "date auto" option of the android standard setting application.
+     *
+     * @param enable
+     *
+     */
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void setSettingAppDateAuto(boolean enable){
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) return;
@@ -186,6 +211,13 @@ public class SettingsHelper extends HelperBase{
             switchObj.click();
         }
     }
+
+    /**
+     * Automatically set the "Airplane" option of the android standard setting application.
+     *
+     * @param enable
+     *
+     */
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void setSettingAirplaneMode(boolean enable){
         startSettingAppAirplaneModeSetting();
@@ -256,6 +288,12 @@ public class SettingsHelper extends HelperBase{
         mDevice.wait(Until.hasObject(By.pkg("com.android.settings").depth(0)),10000);
     }
 
+    /**
+     * Automatically set the "Wi-Fi ON/OFF" option of the android standard setting application.
+     *
+     * @param enable
+     *
+     */
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void setSettingWifiEnable(boolean enable){
         startSettingAppAirplaneModeSetting();
