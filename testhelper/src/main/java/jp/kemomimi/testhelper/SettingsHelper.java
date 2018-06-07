@@ -4,6 +4,7 @@ import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
@@ -16,6 +17,7 @@ import android.widget.Switch;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class SettingsHelper extends HelperBase{
 
@@ -136,6 +138,7 @@ public class SettingsHelper extends HelperBase{
         setDay(Integer.parseInt(setdateStr[2]));
 
         mDevice.findObject(By.textContains(okay)).click();
+        mDevice.wait(Until.gone(By.res("android:id/datePicker")),10000);
         exitSettings();
     }
 
@@ -180,6 +183,7 @@ public class SettingsHelper extends HelperBase{
         startSettingAppDateSetting();
         mDevice = UiDevice.getInstance(mInstrumentation);
         setDateAuto(enable);
+        mDevice.wait(Until.gone(By.res("android:id/datePicker")),10000);
         exitSettings();
     }
 
@@ -351,5 +355,100 @@ public class SettingsHelper extends HelperBase{
             mDevice.pressBack();
         }while (mDevice.wait(Until.hasObject(By.pkg("com.android.settings").depth(0)),5000));
 
+    }
+
+    /**
+     * Automatically set the Clock of the android standard setting application.
+     *
+     * @param date date
+     *
+     */
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public void setSettingClock(Date date){
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) return;
+        startSettingAppDateSetting();
+        setDateAuto(false);
+
+        UiDevice mDevice;
+        Instrumentation instrumentation = mInstrumentation;
+        mDevice = UiDevice.getInstance(instrumentation);
+
+        Context settingContext = null;
+        try {
+            settingContext = mInstrumentation.getContext().createPackageContext(
+                    "com.android.settings",
+                    Context.CONTEXT_IGNORE_SECURITY);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String date_time_set_time = settingContext.getString(
+                settingContext.getResources().getIdentifier("date_time_set_time","string",settingContext.getPackageName()));
+        String okay = settingContext.getString(
+                settingContext.getResources().getIdentifier("okay","string",settingContext.getPackageName()));
+
+
+        UiObject2 setTimeObj = mDevice.findObject(By.textContains(date_time_set_time));
+        setTimeObj.click();
+
+        setClock(date);
+
+        mDevice.findObject(By.textContains(okay)).click();
+
+        mDevice.wait(Until.gone(By.res("android:id/timePicker")),10000);
+        exitSettings();
+    }
+
+    private void setClock(Date date){
+        UiDevice mDevice = UiDevice.getInstance(mInstrumentation);
+        Context context = mInstrumentation.getTargetContext();
+        Context settingContext = null;
+        try {
+            settingContext = mInstrumentation.getContext().createPackageContext(
+                    "com.android.settings",
+                    Context.CONTEXT_IGNORE_SECURITY);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat df = new SimpleDateFormat("kk-mm-ss", Locale.getDefault());
+        String[] datestr = df.format(date).split("-");
+        int hour = Integer.parseInt(datestr[0]);
+        if (hour == 24) hour = 0;
+        int min = Integer.parseInt(datestr[1]);
+
+        if(mDevice.wait(Until.hasObject(By.res("android:id/timePicker")),10000)){
+            UiObject2 am_label = mDevice.findObject(By.res("android:id/am_label"));
+            UiObject2 pm_label = mDevice.findObject(By.res("android:id/pm_label"));
+
+            if(am_label != null && pm_label != null){
+                if( hour > 12){
+                    pm_label.click();
+                    hour = hour - 12;
+                } else {
+                    am_label.click();
+                }
+            }
+            UiObject2 hourobj = mDevice.findObject(By.desc(String.valueOf(hour)));
+            hourobj.click();
+
+            int startmin = min/5*5;
+            String start = String.valueOf(startmin);
+            int endmin = min >= 55?0:(min/5*5)+5;
+            String end = String.valueOf(endmin);
+
+
+            UiObject2 startObj = mDevice.findObject(By.desc(start));
+            UiObject2 endObj = mDevice.findObject(By.desc(end));
+            Point startPoint = startObj.getVisibleCenter();
+            Point endPoint = endObj.getVisibleCenter();
+            int y = (startPoint.y - endPoint.y)/10;
+            int x = (startPoint.x - endPoint.x)/10;
+            Point dest = new Point(startPoint);
+
+            do{
+                mDevice.click(dest.x,dest.y);
+                dest.set(dest.x - x, dest.y - y);
+            } while (!mDevice.wait(Until.hasObject(By.res("android:id/minutes").text(String.valueOf(min))),10));
+        }
     }
 }

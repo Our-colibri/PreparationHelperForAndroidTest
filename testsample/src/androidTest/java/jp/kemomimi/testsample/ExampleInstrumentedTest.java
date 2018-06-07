@@ -7,7 +7,10 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import jp.kemomimi.testhelper.SettingsHelper;
 
@@ -50,6 +53,22 @@ public class ExampleInstrumentedTest {
         SettingsHelper helper = new SettingsHelper(InstrumentationRegistry.getInstrumentation());
         helper.setSettingWifiEnable(false);
         helper.setSettingWifiEnable(true);
+
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+
+        assertEquals("jp.kemomimi.testsample", appContext.getPackageName());
+    }
+
+    @Test
+    public void testClock(){
+        SettingsHelper helper = new SettingsHelper(InstrumentationRegistry.getInstrumentation());
+        SimpleDateFormat df = new SimpleDateFormat("kk:mm",Locale.JAPAN);
+        try {
+            helper.setSettingClock(df.parse("23:59"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
