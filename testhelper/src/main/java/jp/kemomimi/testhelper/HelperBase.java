@@ -44,15 +44,14 @@ public abstract class HelperBase {
         return container.findObject(selector);
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     protected String runShellCommand(String command) throws Exception {
+        ParcelFileDescriptor pfd;
+        FileDescriptor fd = null;
+        InputStream is = null;
+        String outputString = null;
+        BufferedReader br = null;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ParcelFileDescriptor pfd;
-            FileDescriptor fd = null;
-            InputStream is = null;
-            String outputString = null;
-            BufferedReader br = null;
-
             try {
                 pfd = mInstrumentation.getUiAutomation().executeShellCommand(command);
 
@@ -70,7 +69,18 @@ public abstract class HelperBase {
 
             return outputString;
         } else {
-            return null;
+            try {
+                Process process = Runtime.getRuntime().exec(command);
+                process.waitFor();
+                is = process.getInputStream();
+                br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                outputString = br.readLine();
+            }finally {
+                if (is != null) is.close();
+                if (br != null) br.close();
+            }
+
+            return outputString;
         }
     }
 }

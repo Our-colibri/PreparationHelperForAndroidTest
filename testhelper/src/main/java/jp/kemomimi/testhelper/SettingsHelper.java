@@ -13,9 +13,11 @@ import android.support.test.uiautomator.Direction;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
 import android.support.test.uiautomator.Until;
+import android.text.format.DateFormat;
 import android.widget.Switch;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -32,6 +34,13 @@ public class SettingsHelper extends HelperBase{
 
 
     private void setDay(int day){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            setDay_M_or_later(day);
+        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
+            setDay_JBMR2_or_later(day);
+        }
+    }
+    private void setDay_M_or_later(int day){
         UiDevice mDevice;
         Instrumentation instrumentation = mInstrumentation;
         mDevice = UiDevice.getInstance(instrumentation);
@@ -50,30 +59,88 @@ public class SettingsHelper extends HelperBase{
         }
     }
 
+    private void setDay_JBMR2_or_later(int day){
+        UiDevice mDevice;
+        Instrumentation instrumentation = mInstrumentation;
+        mDevice = UiDevice.getInstance(instrumentation);
+
+        mDevice.wait(Until.hasObject(By.res("android:id/datePicker")),10000);
+
+        UiObject2 animator = mDevice.findObject(By.res("android:id/animator"));
+
+        UiObject2 today = animator.findObject(By.descStartsWith(String.format("%02d",day)));
+
+        if(today != null){
+            today.click();
+            mDevice.wait(Until.hasObject(By.selected(true)),10000);
+        }
+    }
+
     private void moveMonth(int moveMonth){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            moveMonth_M_or_later(moveMonth);
+        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
+            moveMonth_JBMR2_or_later(moveMonth);
+        }
+    }
+    private void moveMonth_M_or_later(int moveMonth){
         if(moveMonth == 0) return;
 
         UiDevice mDevice;
         Instrumentation instrumentation = mInstrumentation;
         mDevice = UiDevice.getInstance(instrumentation);
 
-        Context settingContext = null;
-
         mDevice.wait(Until.hasObject(By.res("android:id/datePicker")),10000);
         UiObject2 date_picker_day_picker = mDevice.findObject(By.res("android:id/date_picker_day_picker"));
-        UiObject2 month_view = date_picker_day_picker.findObject(By.res("android:id/month_view"));
-        UiObject2 today = month_view.findObject(By.checked(true));
+        if(date_picker_day_picker != null) {
+            UiObject2 month_view = date_picker_day_picker.findObject(By.res("android:id/month_view"));
 
-        String clickResName = "android:id/prev";
-        if(moveMonth > 0){
-            clickResName = "android:id/next";
-        }
-        moveMonth = Math.abs(moveMonth);
-        for(int i = 0;moveMonth > i;i++) {
-            date_picker_day_picker.findObject(By.res(clickResName)).click();
+            String clickResName = "android:id/prev";
+            if (moveMonth > 0) {
+                clickResName = "android:id/next";
+            }
+            moveMonth = Math.abs(moveMonth);
+            for (int i = 0; moveMonth > i; i++) {
+                date_picker_day_picker.findObject(By.res(clickResName)).click();
+            }
         }
 
         mDevice.wait(Until.gone(By.checked(true)),10000);
+
+    }
+
+    private void moveMonth_JBMR2_or_later(int moveMonth){
+        if(moveMonth == 0) return;
+
+        final String DATE_FORMAT = "dd MMMM yyyy";
+        UiDevice mDevice;
+        Instrumentation instrumentation = mInstrumentation;
+        mDevice = UiDevice.getInstance(instrumentation);
+        Context context = instrumentation.getTargetContext();
+
+        mDevice.wait(Until.hasObject(By.res("android:id/datePicker")),10000);
+        UiObject2 date_picker_year = mDevice.findObject(By.res("android:id/date_picker_year"));
+        UiObject2 date_picker_month = mDevice.findObject(By.res("android:id/date_picker_month"));
+        UiObject2 date_picker_day = mDevice.findObject(By.res("android:id/date_picker_day"));
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        int year = Integer.valueOf(date_picker_year.getText());
+        int month = Integer.valueOf(new SimpleDateFormat("MM").format(new Date()));
+        int day = Integer.valueOf(date_picker_day.getText());
+        cal.set(year, (month-1) + moveMonth, day);
+
+        String monthAndDayText = DateFormat.format(DATE_FORMAT, cal.getTimeInMillis()).toString();
+
+        UiObject2 animator = mDevice.findObject(By.res("android:id/animator"));
+        if(animator != null) {
+            UiObject2 listview = animator.findObject(By.clazz("android.widget.ListView"));
+            Direction d = moveMonth > 0?Direction.DOWN:Direction.UP;
+            moveMonth = Math.abs(moveMonth);
+            while (!mDevice.wait(Until.hasObject(By.desc(monthAndDayText)), 10)) {
+                listview.scroll(d, 90.0f);
+            }
+        }
+
+//        mDevice.wait(Until.gone(By.checked(true)),10000);
 
     }
 
@@ -122,6 +189,7 @@ public class SettingsHelper extends HelperBase{
 
 
         UiObject2 setTimeObj = mDevice.findObject(By.textContains(date_time_set_date));
+        mDevice.wait(Until.hasObject(By.textContains(date_time_set_date).enabled(true)),10000);
         setTimeObj.click();
 
 
@@ -143,6 +211,14 @@ public class SettingsHelper extends HelperBase{
     }
 
     private void selectYear(int year){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            selectYear_M_or_later(year);
+        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
+            selectYear_JBMR2_or_later(year);
+        }
+    }
+
+    private void selectYear_M_or_later(int year){
         Direction direction = Direction.DOWN;
         UiDevice mDevice;
         Instrumentation instrumentation = mInstrumentation;
@@ -156,6 +232,35 @@ public class SettingsHelper extends HelperBase{
         date_picker_header_year.click();
         mDevice.wait(Until.hasObject(By.res("android:id/date_picker_year_picker")),10000);
         UiObject2 date_picker_year_picker = mDevice.findObject(By.res("android:id/date_picker_year_picker"));
+
+        UiObject2 nowyear = date_picker_year_picker.findObject(By.clazz("android.widget.TextView"));
+        if(nowyear != null){
+            int nowInt = Integer.parseInt(nowyear.getText());
+            direction = (year > nowInt)?Direction.DOWN:Direction.UP;
+        }
+
+        UiObject2 obj = scrollAndFind(date_picker_year_picker, By.text(String.valueOf(year)), direction);
+
+        if(obj != null) {
+            obj.click();
+        }
+    }
+
+    private void selectYear_JBMR2_or_later(int year){
+        Direction direction = Direction.DOWN;
+        UiDevice mDevice;
+        Instrumentation instrumentation = mInstrumentation;
+        mDevice = UiDevice.getInstance(instrumentation);
+
+        Context context = instrumentation.getTargetContext();
+
+        mDevice.wait(Until.hasObject(By.res("android:id/datePicker")),10000);
+        UiObject2 date_picker_year = mDevice.findObject(By.res("android:id/date_picker_year"));
+
+        date_picker_year.click();
+        mDevice.wait(Until.hasObject(By.res("android:id/animator")
+                .hasChild(By.clazz("android.widget.ListView").hasChild(By.text(date_picker_year.getText())))),10000);
+        UiObject2 date_picker_year_picker = mDevice.findObject(By.res("android:id/animator"));
 
         UiObject2 nowyear = date_picker_year_picker.findObject(By.clazz("android.widget.TextView"));
         if(nowyear != null){
@@ -299,7 +404,7 @@ public class SettingsHelper extends HelperBase{
      */
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void setSettingWifiEnable(boolean enable){
-        startSettingAppAirplaneModeSetting();
+        startSettingWifiSetting();
         UiDevice mDevice;
         mDevice = UiDevice.getInstance(mInstrumentation);
         setWifiEnable(enable);
@@ -389,6 +494,7 @@ public class SettingsHelper extends HelperBase{
 
 
         UiObject2 setTimeObj = mDevice.findObject(By.textContains(date_time_set_time));
+        mDevice.wait(Until.hasObject(By.textContains(date_time_set_time).enabled(true)),10000);
         setTimeObj.click();
 
         setClock(date);
@@ -449,6 +555,20 @@ public class SettingsHelper extends HelperBase{
                 mDevice.click(dest.x,dest.y);
                 dest.set(dest.x - x, dest.y - y);
             } while (!mDevice.wait(Until.hasObject(By.res("android:id/minutes").text(String.valueOf(min))),10));
+        }
+    }
+
+    /**
+     * set the stay_on_while_plugged_in of the android developer options.
+     *
+     * @param enable ON/OFF
+     *
+     */
+    public void stay_on_while_plugged_in(boolean enable){
+        try {
+            runShellCommand("settings put global stay_on_while_plugged_in " + (enable?"3":"0"));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
