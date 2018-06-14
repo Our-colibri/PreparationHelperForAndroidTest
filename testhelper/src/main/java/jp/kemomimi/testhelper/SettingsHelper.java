@@ -455,6 +455,7 @@ public class SettingsHelper extends HelperBase{
     private void exitSettings(){
         UiDevice mDevice;
         mDevice = UiDevice.getInstance(mInstrumentation);
+        mDevice.waitForIdle(1000);
 
         do{
             mDevice.pressBack();
