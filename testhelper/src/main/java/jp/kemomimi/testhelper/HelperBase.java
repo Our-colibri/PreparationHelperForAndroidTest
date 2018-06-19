@@ -26,7 +26,7 @@ public abstract class HelperBase {
         UiObject2 ret = null;
         do{
             obj = obj.getParent();
-            ret = obj.findObject(selector);
+            if(obj != null) ret = obj.findObject(selector);
             if(ret != null) {
                 return ret;
             }

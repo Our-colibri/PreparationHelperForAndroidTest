@@ -311,12 +311,22 @@ public class SettingsHelper extends HelperBase{
 
         UiObject2 autoTimeObj = mDevice.findObject(By.textContains(date_time_auto/*"日付と時刻の自動設定"*/));
         UiObject2 switchObj = findByParent(autoTimeObj, By.clazz("android.widget.Switch"));
+        if(switchObj == null) {
+            UiObject2 checkboxObj = findByParent(autoTimeObj, By.clazz("android.widget.CheckBox"));
+            if (!enable && checkboxObj != null && checkboxObj.isChecked()) {
+                checkboxObj.click();
+            }
+            if (enable && checkboxObj != null && !checkboxObj.isChecked()) {
+                checkboxObj.click();
+            }
+        } else {
 
-        if(!enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOn())){
-            switchObj.click();
-        }
-        if(enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOff())){
-            switchObj.click();
+            if (!enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOn())) {
+                switchObj.click();
+            }
+            if (enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOff())) {
+                switchObj.click();
+            }
         }
     }
 
@@ -376,11 +386,21 @@ public class SettingsHelper extends HelperBase{
         UiObject2 autoTimeObj = mDevice.findObject(By.textContains(wifi_in_airplane_mode));
         UiObject2 switchObj = findByParent(autoTimeObj, By.clazz("android.widget.Switch"));
 
-        if(!enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOn())){
-            switchObj.click();
-        }
-        if(enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOff())){
-            switchObj.click();
+        if(switchObj == null) {
+            UiObject2 checkboxObj = findByParent(autoTimeObj, By.clazz("android.widget.CheckBox"));
+            if (!enable && checkboxObj != null && checkboxObj.isChecked()) {
+                checkboxObj.click();
+            }
+            if (enable && checkboxObj != null && !checkboxObj.isChecked()) {
+                checkboxObj.click();
+            }
+        } else {
+            if (!enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOn())) {
+                switchObj.click();
+            }
+            if (enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOff())) {
+                switchObj.click();
+            }
         }
     }
 
@@ -432,11 +452,21 @@ public class SettingsHelper extends HelperBase{
 
         UiObject2 switchObj = findByParent(autoTimeObj, By.clazz("android.widget.Switch"));
 
-        if(!enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOn())){
-            switchObj.click();
-        }
-        if(enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOff())){
-            switchObj.click();
+        if(switchObj == null) {
+            UiObject2 checkboxObj = findByParent(autoTimeObj, By.clazz("android.widget.CheckBox"));
+            if (!enable && checkboxObj != null && checkboxObj.isChecked()) {
+                checkboxObj.click();
+            }
+            if (enable && checkboxObj != null && !checkboxObj.isChecked()) {
+                checkboxObj.click();
+            }
+        } else {
+            if (!enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOn())) {
+                switchObj.click();
+            }
+            if (enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOff())) {
+                switchObj.click();
+            }
         }
     }
 
