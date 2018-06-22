@@ -35,7 +35,7 @@ dependencies {
 }
 
 group = "com.kemomimi"
-version = "1.0.6"
+version = "1.0.7"
 
 def siteUrl = 'https://github.com/Our-colibri/PreparationHelperForAndroidTest'
 def gitUrl = 'https://github.com/Our-colibri/PreparationHelperForAndroidTest'
