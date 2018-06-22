@@ -48,8 +48,10 @@ public class SettingsHelper extends HelperBase{
         mDevice.wait(Until.hasObject(By.res("android:id/datePicker")),10000);
 
         UiObject2 date_picker_day_picker = mDevice.findObject(By.res("android:id/date_picker_day_picker"));
+        if(date_picker_day_picker == null) return;
 
         UiObject2 month_view = date_picker_day_picker.findObject(By.res("android:id/month_view"));
+        if(month_view == null) return;
 
         UiObject2 today = month_view.findObject(By.text(String.valueOf(day)));
 
@@ -67,6 +69,7 @@ public class SettingsHelper extends HelperBase{
         mDevice.wait(Until.hasObject(By.res("android:id/datePicker")),10000);
 
         UiObject2 animator = mDevice.findObject(By.res("android:id/animator"));
+        if(animator == null) return;
 
         UiObject2 today = animator.findObject(By.descStartsWith(String.format("%02d",day)));
 
@@ -122,6 +125,7 @@ public class SettingsHelper extends HelperBase{
         UiObject2 date_picker_year = mDevice.findObject(By.res("android:id/date_picker_year"));
         UiObject2 date_picker_month = mDevice.findObject(By.res("android:id/date_picker_month"));
         UiObject2 date_picker_day = mDevice.findObject(By.res("android:id/date_picker_day"));
+        if(date_picker_year == null || date_picker_month == null | date_picker_day == null) return;
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         int year = Integer.valueOf(date_picker_year.getText());
         int month = Integer.valueOf(new SimpleDateFormat("MM").format(new Date()));
@@ -180,6 +184,7 @@ public class SettingsHelper extends HelperBase{
                     Context.CONTEXT_IGNORE_SECURITY);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return;
         }
 
         String date_time_set_date = settingContext.getString(
@@ -187,8 +192,10 @@ public class SettingsHelper extends HelperBase{
         String okay = settingContext.getString(
                 settingContext.getResources().getIdentifier("okay","string",settingContext.getPackageName()));
 
+        if(date_time_set_date == null || okay == null) return;
 
         UiObject2 setTimeObj = mDevice.findObject(By.textContains(date_time_set_date));
+        if(setTimeObj == null) return;
         mDevice.wait(Until.hasObject(By.textContains(date_time_set_date).enabled(true)),10000);
         setTimeObj.click();
 
@@ -228,11 +235,13 @@ public class SettingsHelper extends HelperBase{
 
         mDevice.wait(Until.hasObject(By.res("android:id/datePicker")),10000);
         UiObject2 date_picker_header_year = mDevice.findObject(By.res("android:id/date_picker_header_year"));
+        if(date_picker_header_year == null) return;
 
         date_picker_header_year.click();
         mDevice.wait(Until.hasObject(By.res("android:id/date_picker_year_picker")),10000);
         UiObject2 date_picker_year_picker = mDevice.findObject(By.res("android:id/date_picker_year_picker"));
-
+        if(date_picker_year_picker == null) return;
+        
         UiObject2 nowyear = date_picker_year_picker.findObject(By.clazz("android.widget.TextView"));
         if(nowyear != null){
             int nowInt = Integer.parseInt(nowyear.getText());
@@ -256,11 +265,13 @@ public class SettingsHelper extends HelperBase{
 
         mDevice.wait(Until.hasObject(By.res("android:id/datePicker")),10000);
         UiObject2 date_picker_year = mDevice.findObject(By.res("android:id/date_picker_year"));
+        if(date_picker_year == null) return;
 
         date_picker_year.click();
         mDevice.wait(Until.hasObject(By.res("android:id/animator")
                 .hasChild(By.clazz("android.widget.ListView").hasChild(By.text(date_picker_year.getText())))),10000);
         UiObject2 date_picker_year_picker = mDevice.findObject(By.res("android:id/animator"));
+        if(date_picker_year_picker == null) return;
 
         UiObject2 nowyear = date_picker_year_picker.findObject(By.clazz("android.widget.TextView"));
         if(nowyear != null){
@@ -304,12 +315,14 @@ public class SettingsHelper extends HelperBase{
                     Context.CONTEXT_IGNORE_SECURITY);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return;
         }
 
         String date_time_auto = settingContext.getString(
                 settingContext.getResources().getIdentifier("date_time_auto","string",settingContext.getPackageName()));
 
         UiObject2 autoTimeObj = mDevice.findObject(By.textContains(date_time_auto/*"日付と時刻の自動設定"*/));
+        if(autoTimeObj == null) return;
         UiObject2 switchObj = findByParent(autoTimeObj, By.clazz("android.widget.Switch"));
         if(switchObj == null) {
             UiObject2 checkboxObj = findByParent(autoTimeObj, By.clazz("android.widget.CheckBox"));
@@ -378,12 +391,14 @@ public class SettingsHelper extends HelperBase{
                     Context.CONTEXT_IGNORE_SECURITY);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return;
         }
 
         String wifi_in_airplane_mode = settingContext.getString(
                 settingContext.getResources().getIdentifier("wifi_in_airplane_mode","string",settingContext.getPackageName()));
 
         UiObject2 autoTimeObj = mDevice.findObject(By.textContains(wifi_in_airplane_mode));
+        if(autoTimeObj == null) return;
         UiObject2 switchObj = findByParent(autoTimeObj, By.clazz("android.widget.Switch"));
 
         if(switchObj == null) {
@@ -443,12 +458,14 @@ public class SettingsHelper extends HelperBase{
                     Context.CONTEXT_IGNORE_SECURITY);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return;
         }
 
         String wifi_settings_title = settingContext.getString(
                 settingContext.getResources().getIdentifier("wifi_settings_title","string",settingContext.getPackageName()));
 
         UiObject2 autoTimeObj = mDevice.findObject(By.textContains(wifi_settings_title));
+        if(autoTimeObj == null) return;
 
         UiObject2 switchObj = findByParent(autoTimeObj, By.clazz("android.widget.Switch"));
 
@@ -516,6 +533,7 @@ public class SettingsHelper extends HelperBase{
                     Context.CONTEXT_IGNORE_SECURITY);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return;
         }
 
         String date_time_set_time = settingContext.getString(
@@ -523,8 +541,10 @@ public class SettingsHelper extends HelperBase{
         String okay = settingContext.getString(
                 settingContext.getResources().getIdentifier("okay","string",settingContext.getPackageName()));
 
+        if(date_time_set_time == null || okay == null) return;
 
         UiObject2 setTimeObj = mDevice.findObject(By.textContains(date_time_set_time));
+        if(setTimeObj == null) return;
         mDevice.wait(Until.hasObject(By.textContains(date_time_set_time).enabled(true)),10000);
         setTimeObj.click();
 
@@ -546,6 +566,7 @@ public class SettingsHelper extends HelperBase{
                     Context.CONTEXT_IGNORE_SECURITY);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return;
         }
         SimpleDateFormat df = new SimpleDateFormat("kk-mm-ss", Locale.getDefault());
         String[] datestr = df.format(date).split("-");
@@ -566,6 +587,7 @@ public class SettingsHelper extends HelperBase{
                 }
             }
             UiObject2 hourobj = mDevice.findObject(By.desc(String.valueOf(hour)));
+            if(hourobj == null) return;
             hourobj.click();
 
             int startmin = min/5*5;
@@ -576,6 +598,7 @@ public class SettingsHelper extends HelperBase{
 
             UiObject2 startObj = mDevice.findObject(By.desc(start));
             UiObject2 endObj = mDevice.findObject(By.desc(end));
+            if(startObj == null || endObj == null) return;
             Point startPoint = startObj.getVisibleCenter();
             Point endPoint = endObj.getVisibleCenter();
             int y = (startPoint.y - endPoint.y)/10;
