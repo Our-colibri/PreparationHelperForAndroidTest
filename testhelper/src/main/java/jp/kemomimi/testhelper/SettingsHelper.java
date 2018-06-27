@@ -187,10 +187,13 @@ public class SettingsHelper extends HelperBase{
             return;
         }
 
-        String date_time_set_date = settingContext.getString(
-                settingContext.getResources().getIdentifier("date_time_set_date","string",settingContext.getPackageName()));
-        String okay = settingContext.getString(
-                settingContext.getResources().getIdentifier("okay","string",settingContext.getPackageName()));
+        int resId = settingContext.getResources().getIdentifier("date_time_set_date","string",settingContext.getPackageName());
+        if(resId == 0) return;
+        String date_time_set_date = settingContext.getString(resId);
+
+        resId = settingContext.getResources().getIdentifier("okay","string",settingContext.getPackageName());
+        if(resId == 0) return;
+        String okay = settingContext.getString(resId);
 
         if(date_time_set_date == null || okay == null) return;
 
@@ -241,7 +244,7 @@ public class SettingsHelper extends HelperBase{
         mDevice.wait(Until.hasObject(By.res("android:id/date_picker_year_picker")),10000);
         UiObject2 date_picker_year_picker = mDevice.findObject(By.res("android:id/date_picker_year_picker"));
         if(date_picker_year_picker == null) return;
-        
+
         UiObject2 nowyear = date_picker_year_picker.findObject(By.clazz("android.widget.TextView"));
         if(nowyear != null){
             int nowInt = Integer.parseInt(nowyear.getText());
@@ -318,8 +321,9 @@ public class SettingsHelper extends HelperBase{
             return;
         }
 
-        String date_time_auto = settingContext.getString(
-                settingContext.getResources().getIdentifier("date_time_auto","string",settingContext.getPackageName()));
+        int resId = settingContext.getResources().getIdentifier("date_time_auto","string",settingContext.getPackageName());
+        if(resId == 0) return;
+        String date_time_auto = settingContext.getString(resId);
 
         UiObject2 autoTimeObj = mDevice.findObject(By.textContains(date_time_auto/*"日付と時刻の自動設定"*/));
         if(autoTimeObj == null) return;
@@ -394,10 +398,11 @@ public class SettingsHelper extends HelperBase{
             return;
         }
 
-        String wifi_in_airplane_mode = settingContext.getString(
-                settingContext.getResources().getIdentifier("wifi_in_airplane_mode","string",settingContext.getPackageName()));
+        int resId = settingContext.getResources().getIdentifier("airplane_mode","string",settingContext.getPackageName());
+        if(resId == 0) return;
+        String airplane_mode = settingContext.getString(resId);
 
-        UiObject2 autoTimeObj = mDevice.findObject(By.textContains(wifi_in_airplane_mode));
+        UiObject2 autoTimeObj = mDevice.findObject(By.textContains(airplane_mode));
         if(autoTimeObj == null) return;
         UiObject2 switchObj = findByParent(autoTimeObj, By.clazz("android.widget.Switch"));
 
@@ -410,13 +415,16 @@ public class SettingsHelper extends HelperBase{
                 checkboxObj.click();
             }
         } else {
-            if (!enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOn())) {
+            if (!enable && switchObj != null && switchObj.isChecked()) {
                 switchObj.click();
             }
-            if (enable && switchObj != null && switchObj.getText().equals(new Switch(context).getTextOff())) {
+            if (enable && switchObj != null && !switchObj.isChecked()) {
                 switchObj.click();
             }
         }
+
+        //For confirmation dialog box for model
+        mDevice.wait(Until.gone(By.clazz("android.widget.FrameLayout").depth(0)),5000);
     }
 
 
@@ -461,8 +469,9 @@ public class SettingsHelper extends HelperBase{
             return;
         }
 
-        String wifi_settings_title = settingContext.getString(
-                settingContext.getResources().getIdentifier("wifi_settings_title","string",settingContext.getPackageName()));
+        int resId = settingContext.getResources().getIdentifier("wifi_settings_title","string",settingContext.getPackageName());
+        if(resId == 0) return;
+        String wifi_settings_title = settingContext.getString(resId);
 
         UiObject2 autoTimeObj = mDevice.findObject(By.textContains(wifi_settings_title));
         if(autoTimeObj == null) return;
@@ -536,10 +545,13 @@ public class SettingsHelper extends HelperBase{
             return;
         }
 
-        String date_time_set_time = settingContext.getString(
-                settingContext.getResources().getIdentifier("date_time_set_time","string",settingContext.getPackageName()));
-        String okay = settingContext.getString(
-                settingContext.getResources().getIdentifier("okay","string",settingContext.getPackageName()));
+        int resId = settingContext.getResources().getIdentifier("date_time_set_time","string",settingContext.getPackageName());
+        if(resId == 0) return;
+        String date_time_set_time = settingContext.getString(resId);
+
+        resId = settingContext.getResources().getIdentifier("okay","string",settingContext.getPackageName());
+        if(resId == 0) return;
+        String okay = settingContext.getString(resId);
 
         if(date_time_set_time == null || okay == null) return;
 
