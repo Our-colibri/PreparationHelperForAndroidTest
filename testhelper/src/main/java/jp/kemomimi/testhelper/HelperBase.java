@@ -2,11 +2,13 @@ package jp.kemomimi.testhelper;
 
 import android.app.Instrumentation;
 import android.os.Build;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.RequiresApi;
 import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.Direction;
 import android.support.test.uiautomator.UiObject2;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -82,5 +84,10 @@ public abstract class HelperBase {
 
             return outputString;
         }
+    }
+
+    protected void notifyUnsupportdevice(){
+//        Toast.makeText(mInstrumentation.getContext(), "failed to automatically change to settings.", Toast.LENGTH_LONG).show();
+        android.util.Log.d("SettingsHelper", "failed to automatically change to settings.");
     }
 }
